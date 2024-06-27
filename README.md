@@ -1,6 +1,6 @@
-# Billy Grace - Web Event Tag
+# BillyPix - Web Event Tag
 
-This repository contains the code to the BillyPix Web Event Tag. Please make sure to first initialize the [BillyPix configuration tag](https://github.com/Billy-Grace/billypix-web-conf-tag) before implementing any event with this tag.
+This repository contains the code to the BillyPix Web Event Tag. Please make sure to first initialize the [BillyPix Web Configuration Tag](https://github.com/Billy-Grace/billypix-web-conf-tag) before implementing any event with this tag.
 
 
 
