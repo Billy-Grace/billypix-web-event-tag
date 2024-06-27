@@ -1,5 +1,5 @@
 homepage: "https://www.billygrace.com"
 documentation: "https://help.billygrace.com/en/"
 versions:
-  - sha: TODO
+  - sha: aefc8123c0263583e236958a7bd3cb03aa3520cf
     changeNotes: Initial release
