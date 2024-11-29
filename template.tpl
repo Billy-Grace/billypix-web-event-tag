@@ -705,8 +705,8 @@ scenarios:
     // Call runCode to run the template's code.
     runCode(mockDataPageLoad);
 
-    // Verify that the tag fails
-    assertApi('gtmOnFailure').wasCalled();
+    // Verify that the tag still runs, as it loads the backup
+    assertApi('gtmOnSuccess').wasCalled();
 setup: |-
   const log = require('logToConsole');
   const createArgumentsQueue = require('createArgumentsQueue');
