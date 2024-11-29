@@ -1,5 +1,9 @@
 homepage: "https://www.billygrace.com"
 documentation: "https://help.billygrace.com/en/"
 versions:
+  - sha: 4c7a50e3ebfaf5d2f80b3663c7e1a29a4d90d71f
+    changeNotes: |2
+      * When somebody messes up their sequencing of tags, where the config tag loads after the event tag
+        - Then as a backup we still load the configuration and warn users by means of log to change their sequencing
   - sha: 88b3e5df416d35d0f777eef843a2b6b02a1fa21c
     changeNotes: Initial release
