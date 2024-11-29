@@ -36,6 +36,24 @@ ___TEMPLATE_PARAMETERS___
 
 [
   {
+    "type": "TEXT",
+    "name": "trackingID",
+    "displayName": "Tracking ID",
+    "simpleValueType": true,
+    "notSetText": "Tracking ID needs to be set",
+    "valueValidators": [
+      {
+        "type": "NON_EMPTY"
+      },
+      {
+        "type": "REGEX",
+        "args": [
+          "^ID-([A-Za-z0-9]+-)*[A-Za-z0-9]+$"
+        ]
+      }
+    ]
+  },
+  {
     "type": "RADIO",
     "name": "eventName",
     "displayName": "Event type and name",
@@ -207,6 +225,12 @@ const log = require('logToConsole');
 const copyFromWindow = require('copyFromWindow');
 const getType = require('getType');
 const Object = require('Object');
+const setInWindow = require('setInWindow');
+const createArgumentsQueue = require('createArgumentsQueue');
+const getTimestamp = require('getTimestamp');
+const Math = require('Math');
+const injectScript = require('injectScript');
+
 
 // Debug to see if correct
 if (data.isDebug){
@@ -261,12 +285,13 @@ const getEventData = (data) => {
 };
 
 // Unique identifier for BillyPix, replace 'ID-XXXXXXXX' with actual ID
+const billyPixId = data.trackingID;
+const cdnEndpoint = data.useStaging ? 'https://staging.bgmin.cdn.billygrace.com' : 'https://bgmin.cdn.billygrace.com';
 const billyFunctionName = data.useStaging ? 'StagBillyPix' : 'BillyPix';
 const eventName = getEventName(data);
 const eventData = getEventData(data);
 
-// Return the existing 'BillyPix' global method if available
-let BillyPix = copyFromWindow(billyFunctionName);
+
 
 // Debug to see if correct
 if (data.isDebug){
@@ -280,10 +305,46 @@ if (eventName === 'unknown') {
   return data.gtmOnFailure();
 }
 
+// Return the existing 'BillyPix' global method if available
+let BillyPix = copyFromWindow(billyFunctionName);
+
+function loadBackupBilly (BillyPixBackup) {
+  // Initialize BillyPix so the Tracking ID is set on the web page
+  BillyPixBackup('init', billyPixId);
+  
+  // Debug to see if correct
+  if (data.isDebug){
+    log('Backup: Successfully initialized the ' + billyFunctionName + ' for ID: ' + billyPixId);
+  }
+}
+
+function loadLibraryIfNotAvailable() {
+  // Function to ensure BillyPix is defined and properly queues commands
+  const BillyPixBackup = createArgumentsQueue(billyFunctionName, billyFunctionName + '.queue');
+  
+  // Setup BillyPix with the current timestamp
+  setInWindow(billyFunctionName + '.t', getTimestamp(), false);
+
+  // Generate the script URL with cache busting
+  const secondsBuste = 30*1000;
+  const epochRounded = secondsBuste * Math.ceil(getTimestamp() / secondsBuste);
+  const scriptUrl = cdnEndpoint + '?t=' + epochRounded + '&v=0.2.0';
+  
+  // Inject the BillyPix script
+  injectScript(scriptUrl, loadBackupBilly(BillyPixBackup), data.gtmOnFailure, scriptUrl);
+  
+  return BillyPixBackup;
+}
+
+
 // Sanity check: BillyPix needs to be available
 if (getType(BillyPix) === 'undefined') {
-  log(billyFunctionName + ' not available in window, make sure to first run the "Billy Grace - Web Configuration" tag');
-  return data.gtmOnFailure();
+    
+    // Make it clear they the user messed up
+    log(billyFunctionName + ' not available in window, make sure to first run the "Billy Grace - Web Configuration" tag. For now we are still loading it, but this can lead to performance issued');
+  
+    // Load the backup when not set
+    BillyPix = loadLibraryIfNotAvailable();
 }
 
 // If all is set correct, lets fire the event :)
@@ -576,6 +637,36 @@ ___WEB_PERMISSIONS___
       "isEditedByUser": true
     },
     "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "inject_script",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "urls",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 1,
+                "string": "https://staging.bgmin.cdn.billygrace.com/"
+              },
+              {
+                "type": 1,
+                "string": "https://bgmin.cdn.billygrace.com/"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
   }
 ]
 
@@ -614,8 +705,8 @@ scenarios:
     // Call runCode to run the template's code.
     runCode(mockDataPageLoad);
 
-    // Verify that the tag fails
-    assertApi('gtmOnFailure').wasCalled();
+    // Verify that the tag still runs, as it loads the backup
+    assertApi('gtmOnSuccess').wasCalled();
 setup: |-
   const log = require('logToConsole');
   const createArgumentsQueue = require('createArgumentsQueue');
