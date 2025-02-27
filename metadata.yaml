@@ -1,7 +1,7 @@
 homepage: "https://www.billygrace.com"
 documentation: "https://help.billygrace.com/en/"
 versions:
-  - sha: ADD_WHEN_AVAILABKLE
+  - sha: 87e4e9bba2378361c7bcd1bc2ffa3139a722fc40
     changeNotes: |2
       * Updated options for standard events names
         - order_completed is removed 
