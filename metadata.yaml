@@ -1,6 +1,11 @@
 homepage: "https://www.billygrace.com"
 documentation: "https://help.billygrace.com/en/"
 versions:
+  - sha: ADD_WHEN_AVAILABKLE
+    changeNotes: |2
+      * Updated options for standard events names
+        - order_completed is removed 
+        - purchase_started is added
   - sha: 4c7a50e3ebfaf5d2f80b3663c7e1a29a4d90d71f
     changeNotes: |2
       * When somebody messes up their sequencing of tags, where the config tag loads after the event tag

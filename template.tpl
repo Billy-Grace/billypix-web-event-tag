@@ -73,10 +73,6 @@ ___TEMPLATE_PARAMETERS___
                 "displayValue": "pageload"
               },
               {
-                "value": "purchase",
-                "displayValue": "purchase"
-              },
-              {
                 "value": "add_to_cart",
                 "displayValue": "add_to_cart"
               },
@@ -85,8 +81,12 @@ ___TEMPLATE_PARAMETERS___
                 "displayValue": "search_submitted"
               },
               {
-                "value": "order_completed",
-                "displayValue": "order_completed"
+                "value": "purchase_started",
+                "displayValue": "purchase_started"
+              },
+              {
+                "value": "purchase",
+                "displayValue": "purchase"
               }
             ],
             "simpleValueType": true
