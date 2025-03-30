@@ -1,6 +1,11 @@
 homepage: "https://www.billygrace.com"
 documentation: "https://help.billygrace.com/en/"
 versions:
+  - sha: 85415ccc1dc602b51eb231c0c5ea49a0da1be8db
+    changeNotes: |2
+      * Improved debug logging to follow a standard prefix
+      * Added support for wrong sequencing to still attach the live debugger
+      * Updated backed initialization to not use gtm apis as they can lead to timing issues
   - sha: 87e4e9bba2378361c7bcd1bc2ffa3139a722fc40
     changeNotes: |2
       * Updated options for standard events names
