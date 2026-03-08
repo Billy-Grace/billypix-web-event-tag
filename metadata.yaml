@@ -1,6 +1,9 @@
 homepage: "https://www.billygrace.com"
 documentation: "https://help.billygrace.com/en/"
 versions:
+  - sha: bbaa342e6a33c54e6b00538a92b8b28f8a7a1e27
+    changeNotes: |2
+      * Added robustness fix
   - sha: 85415ccc1dc602b51eb231c0c5ea49a0da1be8db
     changeNotes: |2
       * Improved debug logging to follow a standard prefix
