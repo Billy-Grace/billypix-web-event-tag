@@ -86,12 +86,6 @@ const getEventData = (data) => {
 const eventName = getEventName(data);
 const eventData = getEventData(data);
 
-
-// Debug to see if correct
-debugLog('eventName: ' + eventName);
-debugLog('eventData: ' + JSON.stringify(eventData || {}));
-  
-
 // Sanity check: Fail if no event name is set
 if (eventName === 'unknown') {
   log('[BG Event Tag] Error: No event name is set. Please select a standard event, set a custom event name, or use a variable.');
@@ -177,9 +171,12 @@ function addMainFunctionToWindow() {
       // Get the queue and push to it
       const queue = copyFromWindow(billyFunctionName + '.queue');
       
-      // Add to queu for later processing when remote js arrives
+      // Add to queue for later processing when remote js arrives
       if (queue && getType(queue) === 'array') {
         queue.push(args);
+
+        // Need to overwrite the queue with the new one as its just a copy of the original
+        setInWindow(billyFunctionName + '.queue', queue, true);
       } else {
         
         // If queue isn't available, initialize it first
